@@ -3,40 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber-Core Elite V9</title>
+    <title>Cyber-Core Elite V10</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --neon: #00f2ff; --pink: #ff00e1; --bg: #050608; --card: rgba(255,255,255,0.03); }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; overflow-x: hidden; }
         
-        /* GİRİŞ EKRANI */
+        /* GİRİŞ PANELİ */
         #auth-view { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-box { background: var(--card); border: 1px solid var(--neon); padding: 30px; border-radius: 25px; text-align: center; width: 100%; max-width: 350px; backdrop-filter: blur(15px); }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #000; color: white; outline: none; box-sizing: border-box; }
         .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; background: var(--neon); color: black; margin-top: 10px; transition: 0.3s; }
+        .btn-sec { background: #222; color: #888; margin-top: 5px; font-size: 11px; }
 
-        /* ÜST BAR */
+        /* ANA UI */
         .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; position: sticky; top: 0; background: rgba(5,6,8,0.9); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid #222; }
-        .profile-trigger { display: flex; align-items: center; cursor: pointer; }
-        .avatar-btn { width: 45px; height: 45px; background: linear-gradient(45deg, var(--neon), var(--pink)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; border: 2px solid rgba(255,255,255,0.2); }
+        .avatar-btn { width: 45px; height: 45px; background: linear-gradient(45deg, var(--neon), var(--pink)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; }
         
-        .wallet { background: #1a1a1a; padding: 5px 15px; border-radius: 20px; border: 1px solid var(--neon); color: var(--neon); font-size: 13px; font-weight: bold; }
-
-        /* ANA İÇERİK */
         .content { padding: 20px; max-width: 450px; margin: 0 auto; }
         .xp-card { background: var(--card); padding: 20px; border-radius: 25px; border: 1px solid #222; margin-bottom: 20px; text-align: center; }
         .xp-bar { width: 100%; height: 8px; background: #000; border-radius: 4px; margin: 15px 0; overflow: hidden; }
         #xp-fill { height: 100%; background: var(--neon); width: 0%; transition: 1s; }
 
         /* GÖREVLER */
-        .section-title { font-size: 10px; color: #555; letter-spacing: 3px; margin: 20px 0 10px 5px; text-transform: uppercase; }
         .task { background: #111; padding: 15px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid #222; transition: 0.3s; }
-        .task.done { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
-        
-        .reroll-btn { background: #222; border: none; color: var(--neon); padding: 8px; border-radius: 10px; cursor: pointer; font-size: 14px; margin-left: 10px; transition: 0.3s; }
-        .reroll-btn:hover { background: var(--neon); color: black; transform: rotate(180deg); }
+        .task.done { opacity: 0.2; pointer-events: none; }
+        .reroll-btn { background: #222; border: none; color: var(--neon); padding: 8px; border-radius: 10px; cursor: pointer; margin-left: 10px; }
 
-        /* PROFİL MODAL */
+        /* MODAL */
         #profile-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: #0a0a0a; border: 1px solid var(--pink); padding: 30px; border-radius: 30px; width: 100%; max-width: 320px; text-align: center; }
     </style>
@@ -45,189 +39,174 @@
 
 <div id="auth-view">
     <div class="auth-box">
-        <h2 style="color:var(--neon); letter-spacing:3px;">CYBER-CORE</h2>
+        <h2 style="color:var(--neon); letter-spacing:3px;">CYBER-CORE V10</h2>
         <input type="text" id="user-input" placeholder="Kullanıcı Adı">
         <input type="password" id="pass-input" placeholder="Şifre">
-        <button class="btn" onclick="handleAuth()">SİSTEME GİR</button>
-        <p onclick="switchAuth()" id="switch-text" style="font-size:12px; color:#666; cursor:pointer; margin-top:15px;">Yeni Hesap Oluştur</p>
+        <button class="btn" onclick="Auth.handle()">SİSTEME GİR</button>
+        <p onclick="Auth.switch()" id="switch-text" style="font-size:12px; color:#666; cursor:pointer; margin-top:15px;">Kayıt Ol</p>
     </div>
 </div>
 
 <div id="profile-modal">
     <div class="modal-content">
-        <div id="modal-avatar" style="width:75px; height:75px; border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:32px; background:linear-gradient(45deg, var(--neon), var(--pink)); color:black; font-weight:bold;">?</div>
-        <h3 id="modal-name" style="margin:0;">AGENT</h3>
-        <p id="modal-rank" style="color:var(--neon); font-size:11px; margin-top:5px;">RANK: ÇAYLAK</p>
-        <button class="btn" onclick="logout()" style="background:#222; color:white; margin-top:20px;">ÇIKIŞ YAP</button>
-        <button class="btn" onclick="closeProfile()" style="background:none; color:#444;">KAPAT</button>
+        <h3 id="modal-name">AGENT</h3>
+        <p style="color:var(--neon); font-size:12px;">SİSTEM YÖNETİMİ</p>
+        <hr style="border: 0.5px solid #222; margin: 20px 0;">
+        <button class="btn" onclick="DataService.export()">VERİLERİ YEDEKLE (.json)</button>
+        <button class="btn" onclick="document.getElementById('importFile').click()" style="background:var(--pink)">YEDEKTEN YÜKLE</button>
+        <input type="file" id="importFile" hidden onchange="DataService.import(event)">
+        <button class="btn btn-sec" onclick="Auth.logout()">GÜVENLİ ÇIKIŞ</button>
+        <button class="btn btn-sec" onclick="UI.closeProfile()">KAPAT</button>
     </div>
 </div>
 
 <div id="app-view" style="display:none;">
     <div class="top-bar">
-        <div class="profile-trigger" onclick="openProfile()">
+        <div style="display:flex; align-items:center;" onclick="UI.openProfile()">
             <div id="nav-avatar" class="avatar-btn">?</div>
             <div style="margin-left:12px">
                 <div id="nav-name" style="font-weight:bold; font-size:14px;">AGENT</div>
                 <div id="nav-lvl" style="font-size:11px; color:var(--neon)">LEVEL 1</div>
             </div>
         </div>
-        <div class="wallet" id="user-coins">0 XP</div>
+        <div id="user-coins" style="font-weight:bold; color:var(--neon)">0 XP</div>
     </div>
 
     <div class="content">
         <div class="xp-card">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:#888;">
-                <span>SİSTEM DURUMU</span>
-                <span id="xp-stat">0 / 1000 XP</span>
-            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11px;"><span>SİSTEM İLERLEMESİ</span><span id="xp-stat">0/1000</span></div>
             <div class="xp-bar"><div id="xp-fill"></div></div>
         </div>
-
-        <div class="section-title">GÜNCEL GÖREVLER</div>
         <div id="task-list"></div>
     </div>
 </div>
 
 <script>
-    let isLoginMode = true;
-    let player = null;
+// --- MODÜLER YAPI (SOLID) ---
 
-    // GENİŞ GÖREV HAVUZU
-    const questDatabase = [
-        { t: "Su Kaynağı", d: "Bir bardak su iç.", xp: 200, i: "💧" },
-        { t: "Fiziksel Veri", d: "10 şınav çek.", xp: 400, i: "🦾" },
-        { t: "Zihin Reset", d: "1 dk uzağa bak.", xp: 150, i: "🧘" },
-        { t: "Hızlı Veri", d: "20 squat yap.", xp: 300, i: "🏃" },
-        { t: "Sistem Bakımı", d: "Masayı temizle.", xp: 250, i: "🧹" },
-        { t: "Optik Bakım", d: "Ekrana bakmadan 2 dk dur.", xp: 200, i: "👁️" },
-        { t: "Esneklik Modu", d: "Kollarını 1 dk esnet.", xp: 150, i: "🙆" },
-        { t: "Yüksek Enerji", d: "Bir meyve ye.", xp: 200, i: "🍎" }
-    ];
+const questPool = [
+    { t: "Hidrasyon", d: "Su iç.", xp: 200, i: "💧" },
+    { t: "Core Workout", d: "10 şınav.", xp: 400, i: "🦾" },
+    { t: "Deep Focus", d: "1 dk meditasyon.", xp: 150, i: "🧘" },
+    { t: "Data Walk", d: "5 dk yürü.", xp: 300, i: "🏃" }
+];
 
-    // Aktif görevleri tutan dizi
-    let currentQuests = [];
+let player = null;
 
-    function handleAuth() {
+// 1. Veri Servisi (Yedekleme ve Kaydetme)
+const DataService = {
+    save: () => localStorage.setItem('cyber_v10_' + player.user, JSON.stringify(player)),
+    export: () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(player));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `cyber_backup_${player.user}.json`);
+        downloadAnchor.click();
+    },
+    import: (event) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if(imported.user) {
+                    player = imported;
+                    DataService.save();
+                    location.reload();
+                }
+            } catch(err) { alert("Hatalı dosya!"); }
+        };
+        reader.readAsText(event.target.files[0]);
+    }
+};
+
+// 2. Kimlik Doğrulama
+const Auth = {
+    isLogin: true,
+    switch: () => {
+        Auth.isLogin = !Auth.isLogin;
+        document.getElementById('switch-text').innerText = Auth.isLogin ? "Kayıt Ol" : "Giriş Yap";
+    },
+    handle: () => {
         const u = document.getElementById('user-input').value.trim();
         const p = document.getElementById('pass-input').value.trim();
-        if(!u || !p) return alert("Bilgileri gir!");
+        if(!u || !p) return alert("Eksik veri!");
 
-        if(isLoginMode) {
-            const saved = localStorage.getItem('cyber_v9_' + u);
+        if(Auth.isLogin) {
+            const saved = localStorage.getItem('cyber_v10_' + u);
             if(saved && JSON.parse(saved).pass === p) {
                 player = JSON.parse(saved);
-                // Eğer oyuncunun aktif görevi yoksa veya bittiyse yeni ata
-                if(!player.activeQuests || player.activeQuests.length === 0) {
-                    generateNewQuests();
-                } else {
-                    currentQuests = player.activeQuests;
-                }
-                enterApp();
-            } else { alert("Hata!"); }
+                if(!player.activeQuests) UI.generateQuests();
+                UI.init();
+            } else alert("Hata!");
         } else {
-            const data = { user: u, pass: p, xp: 0, lvl: 1, doneIds: [], coins: 0, activeQuests: [] };
-            localStorage.setItem('cyber_v9_' + u, JSON.stringify(data));
-            alert("Kaydedildi!"); switchAuth();
+            const data = { user: u, pass: p, xp: 0, lvl: 1, coins: 0, activeQuests: [] };
+            localStorage.setItem('cyber_v10_' + u, JSON.stringify(data));
+            alert("Kayıt Başarılı!"); Auth.switch();
         }
-    }
+    },
+    logout: () => location.reload()
+};
 
-    function generateNewQuests() {
-        // Rastgele 3 görev seç
-        let shuffled = [...questDatabase].sort(() => 0.5 - Math.random());
-        currentQuests = shuffled.slice(0, 3).map((q, index) => ({...q, instanceId: index, isDone: false}));
-        player.activeQuests = currentQuests;
-        save();
-    }
-
-    function rerollQuest(instanceId) {
-        // Görevi değiştirmek için 50 XP bedeli (Opsiyonel: bedelsiz yapmak için 0 yapabilirsin)
-        const cost = 0; 
-        if(player.coins < cost) return alert("Yeterli XP yok!");
-        
-        let randomQuest = questDatabase[Math.floor(Math.random() * questDatabase.length)];
-        currentQuests = currentQuests.map(q => q.instanceId === instanceId ? {...randomQuest, instanceId: instanceId, isDone: false} : q);
-        player.activeQuests = currentQuests;
-        player.coins -= cost;
-        save();
-        render();
-    }
-
-    function switchAuth() {
-        isLoginMode = !isLoginMode;
-        document.getElementById('switch-text').innerText = isLoginMode ? "Yeni Hesap Oluştur" : "Giriş Yap";
-    }
-
-    function enterApp() {
+// 3. Kullanıcı Arayüzü (UI)
+const UI = {
+    init: () => {
         document.getElementById('auth-view').style.display = 'none';
         document.getElementById('app-view').style.display = 'block';
-        render();
-    }
-
-    function render() {
-        document.getElementById('nav-avatar').innerText = player.user.charAt(0).toUpperCase();
+        UI.render();
+    },
+    generateQuests: () => {
+        let shuffled = [...questPool].sort(() => 0.5 - Math.random());
+        player.activeQuests = shuffled.slice(0, 3).map((q, i) => ({...q, id: i, done: false}));
+        DataService.save();
+    },
+    render: () => {
+        document.getElementById('nav-avatar').innerText = player.user[0].toUpperCase();
         document.getElementById('nav-name').innerText = player.user.toUpperCase();
         document.getElementById('nav-lvl').innerText = "LEVEL " + player.lvl;
         document.getElementById('user-coins').innerText = player.coins + " XP";
-        document.getElementById('xp-stat').innerText = player.xp + " / 1000 XP";
+        document.getElementById('xp-stat').innerText = player.xp + "/1000";
         document.getElementById('xp-fill').style.width = (player.xp / 10) + "%";
 
         const list = document.getElementById('task-list');
         list.innerHTML = '';
-        
-        currentQuests.forEach(q => {
+        player.activeQuests.forEach(q => {
             const div = document.createElement('div');
-            div.className = `task ${q.isDone ? 'done' : ''}`;
+            div.className = `task ${q.done ? 'done' : ''}`;
             div.innerHTML = `
                 <span style="font-size:24px; margin-right:15px">${q.i}</span>
-                <div style="flex:1" onclick="completeQuest(${q.instanceId})">
-                    <b>${q.t}</b><br><small style="color:#555">${q.d}</small>
-                </div>
-                <div style="text-align:right">
-                    <div style="color:var(--neon); font-size:12px; font-weight:bold;">+${q.xp}</div>
-                    ${!q.isDone ? `<button class="reroll-btn" onclick="rerollQuest(${q.instanceId})">🔄</button>` : ''}
-                </div>
+                <div style="flex:1" onclick="UI.complete(${q.id})"><b>${q.t}</b><br><small>${q.d}</small></div>
+                <button class="reroll-btn" onclick="UI.reroll(${q.id})">🔄</button>
             `;
             list.appendChild(div);
         });
 
-        // Eğer hepsi bittiyse butonu çıkar veya otomatik yenile
-        if(currentQuests.every(q => q.isDone)) {
-            const btn = document.createElement('button');
-            btn.className = "btn";
-            btn.innerText = "YENİ GÖREVLERİ YÜKLE";
-            btn.onclick = () => { generateNewQuests(); render(); };
-            list.appendChild(btn);
+        if(player.activeQuests.every(q => q.done)) {
+            const b = document.createElement('button');
+            b.className="btn"; b.innerText="YENİ GÖREVLER";
+            b.onclick=() => { UI.generateQuests(); UI.render(); };
+            list.appendChild(b);
         }
-    }
-
-    function completeQuest(instanceId) {
-        let q = currentQuests.find(quest => quest.instanceId === instanceId);
-        if(q.isDone) return;
-
-        q.isDone = true;
-        player.xp += q.xp;
-        player.coins += q.xp;
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 } });
-
-        if(player.xp >= 1000) {
-            player.lvl++;
-            player.xp -= 1000;
-            alert("LEVEL UP!");
-        }
-        player.activeQuests = currentQuests;
-        save();
-        render();
-    }
-
-    function save() { localStorage.setItem('cyber_v9_' + player.user, JSON.stringify(player)); }
-    function openProfile() { 
-        document.getElementById('profile-modal').style.display = 'flex'; 
+    },
+    complete: (id) => {
+        let q = player.activeQuests.find(x => x.id === id);
+        if(q.done) return;
+        q.done = true;
+        player.xp += q.xp; player.coins += q.xp;
+        confetti({particleCount: 100});
+        if(player.xp >= 1000) { player.lvl++; player.xp -= 1000; }
+        DataService.save(); UI.render();
+    },
+    reroll: (id) => {
+        let rand = questPool[Math.floor(Math.random()*questPool.length)];
+        player.activeQuests = player.activeQuests.map(x => x.id === id ? {...rand, id: id, done: false} : x);
+        DataService.save(); UI.render();
+    },
+    openProfile: () => {
+        document.getElementById('profile-modal').style.display='flex';
         document.getElementById('modal-name').innerText = player.user.toUpperCase();
-        document.getElementById('modal-avatar').innerText = player.user.charAt(0).toUpperCase();
-    }
-    function closeProfile() { document.getElementById('profile-modal').style.display = 'none'; }
-    function logout() { location.reload(); }
+    },
+    closeProfile: () => document.getElementById('profile-modal').style.display='none'
+};
 </script>
 </body>
 </html>
