@@ -3,189 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber-Core V12: Ghost Mode</title>
+    <title>Siber-Çekirdek V13: Neon Ruh</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --neon: #00f2ff; --pink: #ff00e1; --bg: #020204; }
+        :root { --main: #ff007a; --sub: #00d4ff; --bg: #0b0114; --card: rgba(255, 255, 255, 0.05); }
         
         body { 
-            font-family: 'Courier New', monospace; 
+            font-family: 'Segoe UI', sans-serif; 
             background: var(--bg); color: white; margin: 0; overflow-x: hidden;
+            background-image: radial-gradient(circle at top right, #1a0131, #0b0114);
+            min-height: 100vh;
         }
 
-        /* GLITCH EFEKTİ */
-        .glitch { animation: glitch 1s linear infinite; }
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px, 0) skew(0deg); }
-            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
-            62% { transform: translate(0, 0) skew(5deg); }
+        /* MODERN GİRİŞ */
+        #auth-view { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; background: #0b0114; }
+        .auth-card { 
+            background: var(--card); border: 1px solid var(--sub); padding: 40px; border-radius: 30px; 
+            text-align: center; backdrop-filter: blur(20px); box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
         }
 
-        /* TERMİNAL STİLİ GİRİŞ */
-        #auth-view { position: fixed; inset: 0; z-index: 2000; background: black; display: flex; align-items: center; justify-content: center; }
-        .terminal-box { width: 90%; max-width: 400px; padding: 20px; border: 1px solid var(--neon); box-shadow: 0 0 20px var(--neon); }
-        
-        input { 
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--neon);
-            color: var(--neon); padding: 10px; outline: none; margin: 10px 0; font-family: 'Courier New';
+        /* SİBER YOLDAŞ (AI) */
+        .pet-box { 
+            background: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 15px; 
+            margin: 20px; display: flex; align-items: center; border: 1px solid var(--main);
+            box-shadow: 0 0 15px rgba(255, 0, 122, 0.2);
         }
+        #pet-icon { font-size: 40px; margin-right: 15px; animation: float 3s ease-in-out infinite; }
+        #pet-text { font-size: 13px; color: var(--sub); font-weight: bold; }
 
-        /* ANA PANEL */
-        .top-bar { padding: 20px; border-bottom: 1px dashed var(--neon); display: flex; justify-content: space-between; align-items: center; }
-        .content { padding: 20px; max-width: 500px; margin: 0 auto; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* GİZLİ TERMİNAL */
-        #cmd-line { 
-            background: #000; color: #0f0; padding: 5px; font-size: 10px; 
-            width: 100%; border: none; border-top: 1px solid #333; position: fixed; bottom: 0;
-        }
+        /* ANA UI */
+        .header { display: flex; justify-content: space-between; padding: 20px; align-items: center; }
+        .lvl-tag { background: var(--main); color: white; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 12px; }
+
+        .content { padding: 0 20px 100px 20px; max-width: 500px; margin: 0 auto; }
 
         /* GÖREV KARTLARI */
         .task-card { 
-            background: rgba(0, 242, 255, 0.05); border-left: 5px solid var(--neon);
-            padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;
-            position: relative; overflow: hidden;
+            background: var(--card); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 20px; margin-bottom: 15px; display: flex; 
+            align-items: center; transition: 0.3s;
         }
-        .task-card:hover { background: rgba(0, 242, 255, 0.1); transform: translateX(10px); }
-        .task-card.done { border-left-color: var(--pink); opacity: 0.4; }
+        .task-card:hover { border-color: var(--sub); transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); }
+        .task-card.done { opacity: 0.1; pointer-events: none; }
 
-        /* SEVİYE PLAKASI */
-        .lvl-shield { 
-            width: 60px; height: 60px; border: 2px solid var(--neon); 
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        .xp-text { color: var(--main); font-weight: bold; margin-left: auto; font-size: 14px; }
+
+        /* ALT BAR */
+        .footer-bar { 
+            position: fixed; bottom: 0; width: 100%; background: rgba(11, 1, 20, 0.9); 
+            backdrop-filter: blur(10px); border-top: 1px solid var(--main); padding: 15px;
+            display: flex; justify-content: space-around;
         }
 
-        .matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.05; pointer-events: none; }
+        input[type="text"], input[type="password"] {
+            background: rgba(255,255,255,0.05); border: 1px solid #444; color: white;
+            padding: 10px; border-radius: 10px; margin-bottom: 10px; width: 100%; outline: none;
+        }
     </style>
 </head>
 <body>
 
-<canvas id="matrix" class="matrix-bg"></canvas>
-
 <div id="auth-view">
-    <div class="terminal-box">
-        <h2 class="glitch">> CORE_ACCESS_REQUIRED</h2>
-        <input type="text" id="user-input" placeholder="ID_IDENTIFIER">
-        <input type="password" id="pass-input" placeholder="ENCRYPTION_KEY">
-        <button onclick="Auth.handle()" style="background:var(--neon); color:black; border:none; padding:10px; width:100%; cursor:pointer; font-weight:bold;">INITIALIZE</button>
+    <div class="auth-card">
+        <h1 style="color:var(--sub); letter-spacing:5px;">SİBER-GİRİŞ</h1>
+        <input type="text" id="user-input" placeholder="Kullanıcı Adı">
+        <input type="password" id="pass-input" placeholder="Erişim Şifresi">
+        <button onclick="Auth.start()" style="background:var(--sub); border:none; padding:12px 30px; border-radius:10px; font-weight:bold; cursor:pointer; width:100%;">SİSTEMİ BAŞLAT</button>
     </div>
 </div>
 
 <div id="app-view" style="display:none;">
-    <div class="top-bar">
-        <div class="lvl-shield" id="nav-lvl">1</div>
-        <div style="text-align:right">
-            <div id="nav-name" style="color:var(--neon); font-weight:bold;">AGENT_NULL</div>
-            <div id="user-coins" style="font-size:12px;">0.00 BTC</div>
+    <div class="header">
+        <div>
+            <h2 id="user-display" style="margin:0; font-size:18px;">AGENT</h2>
+            <div id="coin-display" style="color:var(--sub); font-weight:bold;">0 XP</div>
         </div>
+        <div class="lvl-tag" id="lvl-display">SEVİYE 1</div>
+    </div>
+
+    <div class="pet-box">
+        <div id="pet-icon">🤖</div>
+        <div id="pet-text">Sisteme hoş geldin dostum. Bugün hangi protokolleri tamamlıyoruz?</div>
     </div>
 
     <div class="content">
-        <div style="margin-bottom:20px; font-size:11px; color:#555;">[ SYSTEM_STATUS: ONLINE ]</div>
         <div id="task-list"></div>
     </div>
 
-    <input type="text" id="cmd-line" placeholder="TERMINAL_CMD: /help" onkeydown="Terminal.exec(event)">
+    <div class="footer-bar">
+        <button onclick="Data.export()" style="background:none; border:1px solid var(--sub); color:var(--sub); padding:5px 15px; border-radius:10px; font-size:12px;">YEDEK AL</button>
+        <button onclick="Auth.logout()" style="background:none; border:1px solid var(--main); color:var(--main); padding:5px 15px; border-radius:10px; font-size:12px;">ÇIKIŞ</button>
+    </div>
 </div>
 
 <script>
-// --- MATRIX ARKAPLAN EFEKTİ ---
-const canvas = document.getElementById('matrix');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
-const fontSize = 10;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-
-function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#0f0";
-    drops.forEach((y, i) => {
-        const text = letters[Math.floor(Math.random() * letters.length)];
-        ctx.fillText(text, i * fontSize, y * fontSize);
-        if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-    });
-}
-setInterval(drawMatrix, 50);
-
-// --- OYUN MANTIĞI ---
-let player = null;
-const quests = [
-    { t: "BIO_SYNC", d: "Sıvı tüketimi yap.", xp: 200, i: "🔋" },
-    { t: "CORE_STRENGTH", d: "10x Şınav protokolü.", xp: 400, i: "🦾" },
-    { t: "EYE_REST", d: "Ekrana bakmadan 60 sn dur.", xp: 150, i: "👁️" }
+// GÖREV LİSTESİ
+const gorevler = [
+    { ad: "Sıvı Entegrasyonu", detay: "Bir bardak su iç.", xp: 200, simge: "💧" },
+    { ad: "Fiziksel Optimizasyon", detay: "10 şınav çek.", xp: 400, simge: "🦾" },
+    { ad: "Zihinsel Durulama", detay: "2 dakika meditasyon yap.", xp: 150, simge: "🧘" },
+    { ad: "Sistem Temizliği", detay: "Çalışma masanı toparla.", xp: 300, simge: "🧹" }
 ];
 
+const petMesajlari = [
+    "Harika gidiyorsun! Devam et.",
+    "Biraz yorulmuş gibisin, su içmeye ne dersin?",
+    "Vay canına! XP'ler akıyor.",
+    "Sistem kararlılığı %100 dostum!",
+    "Hadi, bir görev daha tamamlayalım!"
+];
+
+let player = null;
+
 const Auth = {
-    handle: () => {
+    start: () => {
         const u = document.getElementById('user-input').value;
         const p = document.getElementById('pass-input').value;
-        const saved = localStorage.getItem('cyber_v12_'+u);
-        if(saved && JSON.parse(saved).pass === p) {
-            player = JSON.parse(saved);
-            UI.init();
-        } else if(!saved) {
-            player = { user: u, pass: p, xp: 0, lvl: 1, coins: 0, done: [] };
-            localStorage.setItem('cyber_v12_'+u, JSON.stringify(player));
-            UI.init();
-        } else alert("ACCESS_DENIED");
-    }
+        if(!u || !p) return alert("Bilgileri gir!");
+
+        const kayıtlı = localStorage.getItem('cyber_v13_'+u);
+        if(kayıtlı) {
+            player = JSON.parse(kayıtlı);
+            if(player.pass !== p) return alert("Yanlış şifre!");
+        } else {
+            player = { user: u, pass: p, xp: 0, lvl: 1, coins: 0, tamamlananlar: [] };
+        }
+        UI.init();
+    },
+    logout: () => location.reload()
 };
 
 const UI = {
     init: () => {
-        document.getElementById('auth-view').style.display='none';
-        document.getElementById('app-view').style.display='block';
+        document.getElementById('auth-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'block';
         UI.render();
     },
     render: () => {
-        document.getElementById('nav-name').innerText = "AGENT_" + player.user.toUpperCase();
-        document.getElementById('nav-lvl').innerText = player.lvl;
-        document.getElementById('user-coins').innerText = (player.coins / 1000).toFixed(3) + " BTC";
+        document.getElementById('user-display').innerText = player.user.toUpperCase();
+        document.getElementById('coin-display').innerText = player.coins + " XP";
+        document.getElementById('lvl-display').innerText = "SEVİYE " + player.lvl;
         
-        const list = document.getElementById('task-list');
-        list.innerHTML = '';
-        quests.forEach((q, i) => {
-            const isDone = player.done.includes(i);
-            list.innerHTML += `
-                <div class="task-card ${isDone?'done':''}" onclick="UI.complete(${i})">
-                    <div style="font-weight:bold; color:var(--neon)">> ${q.t}</div>
-                    <div style="font-size:11px; color:#888">${q.d}</div>
+        const liste = document.getElementById('task-list');
+        liste.innerHTML = '';
+        
+        gorevler.forEach((g, i) => {
+            const bitti = player.tamamlananlar.includes(i);
+            liste.innerHTML += `
+                <div class="task-card ${bitti ? 'done' : ''}" onclick="UI.tamamla(${i})">
+                    <span style="font-size:30px; margin-right:20px;">${g.simge}</span>
+                    <div>
+                        <b style="color:var(--sub)">${g.ad}</b><br>
+                        <small style="color:#888">${g.detay}</small>
+                    </div>
+                    <div class="xp-text">+${g.xp}</div>
                 </div>
             `;
         });
     },
-    complete: (i) => {
-        if(player.done.includes(i)) return;
-        player.done.push(i);
-        player.xp += quests[i].xp;
-        player.coins += quests[i].xp;
-        if(player.xp >= 1000) { player.lvl++; player.xp = 0; alert("LEVEL_UP: " + player.lvl); }
-        localStorage.setItem('cyber_v12_'+player.user, JSON.stringify(player));
+    tamamla: (i) => {
+        if(player.tamamlananlar.includes(i)) return;
+        player.tamamlananlar.push(i);
+        player.coins += gorevler[i].xp;
+        player.xp += gorevler[i].xp;
+
+        // Rastgele pet mesajı
+        document.getElementById('pet-text').innerText = petMesajlari[Math.floor(Math.random() * petMesajlari.length)];
+        
+        if(player.xp >= 1000) {
+            player.lvl++;
+            player.xp = 0;
+            player.tamamlananlar = []; // Seviye atlayınca görevler sıfırlanır
+            alert("TEBRİKLER! Seviye Atladın: " + player.lvl);
+        }
+
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.8 }, colors: ['#ff007a', '#00d4ff'] });
+        Data.save();
         UI.render();
     }
 };
 
-// --- GİZLİ TERMİNAL KOMUTLARI ---
-const Terminal = {
-    exec: (e) => {
-        if(e.key === "Enter") {
-            const cmd = e.target.value;
-            if(cmd === "/hack-xp") {
-                player.xp += 500;
-                alert("XP_INJECTED");
-            } else if(cmd === "/reset") {
-                player.done = [];
-            } else if(cmd === "/ghost") {
-                document.body.style.filter = "invert(1) hue-rotate(180deg)";
-            }
-            e.target.value = "";
-            UI.render();
-        }
+const Data = {
+    save: () => localStorage.setItem('cyber_v13_'+player.user, JSON.stringify(player)),
+    export: () => {
+        const veri = JSON.stringify(player);
+        const blob = new Blob([veri], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `siber_yedek_${player.user}.json`;
+        a.click();
     }
 };
 </script>
